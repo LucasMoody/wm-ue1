@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -23,6 +24,11 @@ import javax.swing.border.EmptyBorder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.w3c.dom.Text;
+
+import utils.FileParser;
+import core.TextAnalyser;
+
+import javax.swing.JRadioButton;
 
 public class Analysis extends JFrame {
 
@@ -81,7 +87,7 @@ public class Analysis extends JFrame {
 				
 				System.out.println("The following text has been found:");
 				
-				// Enter the website
+				// Enter  website number 1
 				
 				Document doc = null;
 				try {
@@ -90,44 +96,28 @@ public class Analysis extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-				
-				String text = doc.body().text();
-				//String text="Welcome to the TinyTIM WWW Page! Commonly known as our HTML Resource, or, simply, Owen's Brother, Phil This site is provided as a service to help people who have had their interaction with the Internet reduced to a series of Icon Clicking and moving a little bar around. It's time to expand your horizons with TinyTIM! TinyTIM is the world's oldest running MUSH (Multi-User Shared Hallucination), over 18 years old. It's a lot of fun and beats getting run over by a car. To get more pages and stuff, simply choose one of the following three areas and follow the link that best describes what's going through your mind at the moment. Nothing could be easier! Never used TinyTIM I've never used TinyTIM before. I was sure this was going to be a WWW page about the singer! Where's Tiptoe through the Tulips in .au form? Oh, well. What the hell is this TinyTIM thing? What are MUSHes? Where am I? Used TinyTIM, want to expand experience Of course I use TinyTIM! Everybody uses TinyTIM! Some people are even using TinyTIM right now! TinyTIM is one of the basic four food groups. What I really want is to expand my addiction to TinyTIM by getting pictures, sounds, and blurbs about my all-time favorite Internet Experience and its well-read wizards... and then I'll get the t-shirt. Clicks on random icons in WWW pages Uh, I'm looking for weather maps of Africa. Play TinyTIM! (telnet yay.tim.org 5440) And remember, Accept NO Imitations! his mess is maintained by Empedocles the Ash Ock who learned HTML in several passionate and info-filled minutes and lives in a condo. At the same time. Most of the main text, including this biography of Empedocles that Emp would never think to write, is by Sketch the Art Cow, who has a lava lamp and spends too much time with your sister.";
+				String text = doc.body().text().toLowerCase();
 
-				
-				/*
-				// Text Kontrolle für Tom Sawyer
-				if(text.contains("Some minutes later the")){
-					System.out.println(true);
+				// Enter website number 2
+				Document doc2 = null;
+				try {
+					doc2 = Jsoup.connect(url2).get();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				if(text.contains("After breakfast they went whooping and prancing out on the bar, and chased each other round and round")){
-					System.out.println(true);
-					
-				}
-				if(text.contains("and sail thro' blood-y seas")){
-					System.out.println(true);
-				}*/
-				
-				// Ausgabe des Textes
-				System.out.println(text);
+				String text2 = doc2.body().text().toLowerCase();
 				
 				
 				// Use Hashmap 
 				
-		        
-				TreeMap<String, Integer> map = new TreeMap<String,Integer>(String.CASE_INSENSITIVE_ORDER);
+				File file = new File("./stopwords/english.txt");
+				//File file2 = new File("C:\\Users\\Alex\\Desktop\\english.txt");
+				Set<String> stopwords = null;
 				
-				// Kick punctuations
-				text = text.replaceAll("[!?,.')(]", "");
-				text = text.replaceAll("\"", "");
 				
-				// Extract words
-				String[] words = text.split("\\s+");
-				
-				File file = new File("C:\\Users\\Alex\\workspace\\WebMining\\stopwords\\english.txt");
 				try {
-					System.out.println(parseStopwords(file));
+					stopwords = FileParser.parseStopwords(file);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -135,23 +125,14 @@ public class Analysis extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				//System.out.println(TextAnalyser.getWordFrequencies(text, stopwords));
+		        System.out.println(TextAnalyser.getMostFrequentWords(text, stopwords,30));
+		        
+		        System.out.println();
+		        
+		        System.out.println(TextAnalyser.getMostFrequentWords(text2, stopwords,30));
 			
-				int count;
-				for (int i = 0; i < words.length; i++) {
-					if(!map.containsKey(words[i])){
-						map.put(words[i], 1);
-					}else{
-						count = map.get(words[i]);
-						count++;
-						map.put(words[i], count);
-					}
-				}
-				
-				System.out.println(map);
-				
-				
-			
-				
+		
 				
 				
 			}
@@ -189,16 +170,5 @@ public class Analysis extends JFrame {
 		contentPane.add(chckbxNewCheckBox_1);
 	}
 	
-	LinkedList<String> stopwords;
-	 LinkedList<String> parseStopwords(File file) throws FileNotFoundException, IOException{
-		   try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			    String line;
-			    while ((line = br.readLine()) != null) {
-			       stopwords.add(line);
-			    }
-			}
-		   return stopwords;
-		   
-	   }
 	
 }
