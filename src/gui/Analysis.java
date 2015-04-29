@@ -4,7 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -17,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.w3c.dom.Text;
 
 public class Analysis extends JFrame {
 
@@ -91,7 +97,7 @@ public class Analysis extends JFrame {
 
 				
 				/*
-				// Text Kontrolle fï¿½r Tom Sawyer
+				// Text Kontrolle für Tom Sawyer
 				if(text.contains("Some minutes later the")){
 					System.out.println(true);
 				}
@@ -119,6 +125,17 @@ public class Analysis extends JFrame {
 				// Extract words
 				String[] words = text.split("\\s+");
 				
+				File file = new File("C:\\Users\\Alex\\workspace\\WebMining\\stopwords\\english.txt");
+				try {
+					System.out.println(parseStopwords(file));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 				int count;
 				for (int i = 0; i < words.length; i++) {
 					if(!map.containsKey(words[i])){
@@ -140,7 +157,7 @@ public class Analysis extends JFrame {
 			}
 		});
 		
-	
+	  
 		
 		
 		btnStart.setBounds(232, 228, 89, 23);
@@ -171,4 +188,17 @@ public class Analysis extends JFrame {
 		chckbxNewCheckBox_1.setBounds(10, 141, 142, 23);
 		contentPane.add(chckbxNewCheckBox_1);
 	}
+	
+	LinkedList<String> stopwords;
+	 LinkedList<String> parseStopwords(File file) throws FileNotFoundException, IOException{
+		   try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			    String line;
+			    while ((line = br.readLine()) != null) {
+			       stopwords.add(line);
+			    }
+			}
+		   return stopwords;
+		   
+	   }
+	
 }
