@@ -10,12 +10,25 @@ import java.util.TreeMap;
 import common.Pair;
 
 public class TextAnalyser {
+	
+	private String text;
+	private Set<String> stopWords;
 
-	public static TreeMap<String, Integer> getWordFrequencies(String text, Set<String> stopWords) {
+
+	public TextAnalyser(String text) {
+		this.text = text;
+	}
+	
+	public TextAnalyser(String text, Set<String> stopWords) {
+		this.text = text;
+		this.stopWords = stopWords;
+	}
+
+	public TreeMap<String, Integer> getWordFrequencies() {
 		TreeMap<String, Integer> map = new TreeMap<String,Integer>(String.CASE_INSENSITIVE_ORDER);
 		
 		// Kick punctuations
-		text = text.replaceAll("[!?,.-')(]", "");
+		text = text.replaceAll("[!?,.\\-')(]", "");
 		text = text.replaceAll("\"", "");
 		
 		// Extract words
@@ -38,11 +51,7 @@ public class TextAnalyser {
 		return map;
 	}
 	
-	public static TreeMap<String, Integer> getWordFrequencies (String text) {
-		return getWordFrequencies(text, null);
-	}
-	
-	public static TreeMap<Character, Integer> getCharFrequencies(String text, boolean lowerCase) {
+	public TreeMap<Character, Integer> getCharFrequencies(boolean lowerCase) {
 		//TreeMap<Character, Integer> map = new TreeMap<Character, Integer>(String.CASE_INSENSITIVE_ORDER);
 		TreeMap<Character, Integer> map = new TreeMap<>();
 		text = text.replaceAll("\\s", "");
@@ -60,12 +69,27 @@ public class TextAnalyser {
 		return map;
 	}
 	
-	public static List<Pair<String, Integer>> getMostFrequentWords(String text, int number) {
-		return getMostFrequentWords(text, null, number);
+	public TreeMap<String, Integer> getCharPairFrequencies(boolean lowerCase) {
+		//TreeMap<Character, Integer> map = new TreeMap<Character, Integer>(String.CASE_INSENSITIVE_ORDER);
+		TreeMap<String, Integer> map = new TreeMap<>();
+		text = text.replaceAll("\\s", "");
+		int count;
+		String s = "";
+		for(int i = 0; i<text.length() - 1; i++) {
+			s = lowerCase ? text.substring(i, i + 2).toLowerCase() : text.substring(i, i + 2);
+			if(!map.containsKey(s)){
+				map.put(s, 1);
+			}else{
+				count = map.get(s);
+				count++;
+				map.put(s, count);
+			}
+		}
+		return map;
 	}
 	
-	public static List<Pair<String, Integer>> getMostFrequentWords(String text, Set<String> stopWords, int number) {
-		TreeMap<String, Integer> map = getWordFrequencies(text, stopWords);
+	public List<Pair<String, Integer>> getMostFrequentWords(int number) {
+		TreeMap<String, Integer> map = getWordFrequencies();
 		List<Pair<String, Integer>> result = new ArrayList<>();
 		for (String word : map.keySet()) {
 			result.add(new Pair<String, Integer>(word, map.get(word)));
@@ -74,11 +98,11 @@ public class TextAnalyser {
 
 			@Override
 			public int compare(Pair<String, Integer> o1,
-					Pair<String, Integer> o2) {
+					Pair<String, Integer> o2) {http://www.gutenberg.org/
 				return o2.getSecond() - o1.getSecond();
 			}
 		});
-		return result;
+		return result.subList(0, number - 1);
 	}
 	
 	public static Set<String> getIntercept(Set<String> s1, Set <String>s2){
@@ -89,9 +113,8 @@ public class TextAnalyser {
 		
 	}
 	
-	
-	public static List<Pair<Character, Integer>> getCharFrequencies(String text, int number, boolean lowerCase) {
-		TreeMap<Character, Integer> map = getCharFrequencies(text, lowerCase);
+	public List<Pair<Character, Integer>> getMostFrequentChars(int number, boolean lowerCase) {
+		TreeMap<Character, Integer> map = getCharFrequencies(lowerCase);
 		List<Pair<Character, Integer>> result = new ArrayList<>();
 		for (Character word : map.keySet()) {
 			result.add(new Pair<Character, Integer>(word, map.get(word)));
@@ -101,10 +124,27 @@ public class TextAnalyser {
 			@Override
 			public int compare(Pair<Character, Integer> o1,
 					Pair<Character, Integer> o2) {
-				return o1.getSecond() - o2.getSecond();
+				return o2.getSecond() - o1.getSecond();
 			}
 		});
-		return result;
+		return result.subList(0, number - 1);
+	}
+	
+	public List<Pair<String, Integer>> getMostFrequentCharPairs(int number, boolean lowerCase) {
+		TreeMap<String, Integer> map = getCharPairFrequencies(lowerCase);
+		List<Pair<String, Integer>> result = new ArrayList<>();
+		for (String charPair : map.keySet()) {
+			result.add(new Pair<String, Integer>(charPair, map.get(charPair)));
+		}
+		Collections.sort(result, new Comparator<Pair<String, Integer>>() {
+
+			@Override
+			public int compare(Pair<String, Integer> o1,
+					Pair<String, Integer> o2) {
+				return o2.getSecond() - o1.getSecond();
+			}
+		});
+		return result.subList(0, number - 1);
 	}
 	
 }

@@ -4,14 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,12 +19,9 @@ import javax.swing.border.EmptyBorder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.w3c.dom.Text;
 
-import utils.FileParser;
 import core.TextAnalyser;
-
-import javax.swing.JRadioButton;
+import core.TextComparer;
 
 public class Analysis extends JFrame {
 
@@ -116,24 +109,28 @@ public class Analysis extends JFrame {
 				Set<String> stopwords = null;
 				
 				
-				try {
-					stopwords = FileParser.parseStopwords(file);
+				/*try {
+					//stopwords = FileParser.parseStopwords(file);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
-				//System.out.println(TextAnalyser.getWordFrequencies(text, stopwords));
-		        System.out.println(TextAnalyser.getMostFrequentWords(text, stopwords,30));
-		        
-		        System.out.println();
-		        
-		        System.out.println(TextAnalyser.getMostFrequentWords(text2, stopwords,30));
-			
-		
+				}*/
 				
+				TextAnalyser ta = new TextAnalyser(text, null);
+				//System.out.println(TextAnalyser.getWordFrequencies(text, stopwords));
+		        System.out.println(ta.getMostFrequentWords(30));
+		        
+		        System.out.println(ta.getMostFrequentChars(30, false));
+		        
+		        System.out.println(ta.getMostFrequentCharPairs(30, false));
+		        
+		        TextComparer tc = new TextComparer();
+		        Set<String> set = tc.getTextIntercept(text, text2);
+		        System.out.println(set);
+		        System.out.println(set.size());
 				
 			}
 		});
