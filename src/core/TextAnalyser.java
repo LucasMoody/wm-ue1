@@ -89,7 +89,11 @@ public class TextAnalyser {
 	}
 	
 	public List<Pair<String, Integer>> getMostFrequentWords(int number) {
+		int endPosition = number - 1;
 		TreeMap<String, Integer> map = getWordFrequencies();
+		if (number == -1) {
+			endPosition = map.keySet().size() - 1;
+		}
 		List<Pair<String, Integer>> result = new ArrayList<>();
 		for (String word : map.keySet()) {
 			result.add(new Pair<String, Integer>(word, map.get(word)));
@@ -102,19 +106,15 @@ public class TextAnalyser {
 				return o2.getSecond() - o1.getSecond();
 			}
 		});
-		return result.subList(0, number - 1);
-	}
-	
-	public static Set<String> getIntercept(Set<String> s1, Set <String>s2){
-	
-		
-		
-		return null;
-		
+		return result.subList(0, endPosition);
 	}
 	
 	public List<Pair<Character, Integer>> getMostFrequentChars(int number, boolean lowerCase) {
+		int endPosition = number - 1;
 		TreeMap<Character, Integer> map = getCharFrequencies(lowerCase);
+		if (number == -1) {
+			endPosition = map.keySet().size() - 1;
+		}
 		List<Pair<Character, Integer>> result = new ArrayList<>();
 		for (Character word : map.keySet()) {
 			result.add(new Pair<Character, Integer>(word, map.get(word)));
@@ -127,11 +127,15 @@ public class TextAnalyser {
 				return o2.getSecond() - o1.getSecond();
 			}
 		});
-		return result.subList(0, number - 1);
+		return result.subList(0, endPosition);
 	}
 	
 	public List<Pair<String, Integer>> getMostFrequentCharPairs(int number, boolean lowerCase) {
+		int endPosition = number - 1;
 		TreeMap<String, Integer> map = getCharPairFrequencies(lowerCase);
+		if (number == -1) {
+			endPosition = map.keySet().size() - 1;
+		}
 		List<Pair<String, Integer>> result = new ArrayList<>();
 		for (String charPair : map.keySet()) {
 			result.add(new Pair<String, Integer>(charPair, map.get(charPair)));
@@ -144,7 +148,7 @@ public class TextAnalyser {
 				return o2.getSecond() - o1.getSecond();
 			}
 		});
-		return result.subList(0, number - 1);
+		return result.subList(0, endPosition);
 	}
 	
 }
