@@ -15,7 +15,6 @@ public class FileParser {
 		   try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			    String line;
 			    while ((line = br.readLine()) != null) {
-			       System.out.println(line);
 			       stopwords.add(line);
 			    }
 			}

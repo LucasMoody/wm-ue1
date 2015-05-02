@@ -121,7 +121,7 @@ public class Analysis extends JFrame {
 				
 				TextAnalyser ta = new TextAnalyser(text, null);
 				//System.out.println(TextAnalyser.getWordFrequencies(text, stopwords));
-		        System.out.println(ta.getMostFrequentWords(30));
+		        System.out.println(ta.getMostFrequentWords(30, true));
 		        
 		        System.out.println(ta.getMostFrequentChars(30, false));
 		        

@@ -2,11 +2,14 @@ package console;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import utils.FileParser;
 import utils.WebDocumentParser;
+
 import common.Pair;
+
 import core.TextAnalyser;
 
 public class ConsoleApplication {
@@ -55,7 +58,7 @@ public class ConsoleApplication {
 		}
 		if (command != null && command.equals("getWordFrequencies")) {
 			List<Pair<String, Integer>> pairs = ta
-					.getMostFrequentWords(numberOfUnits);
+					.getMostFrequentWords(numberOfUnits, lowerCase);
 			for (Pair<String, Integer> pair : pairs) {
 				System.out.println(pair.getFirst() + "," + pair.getSecond());
 			}
@@ -65,7 +68,7 @@ public class ConsoleApplication {
 			for (Pair<Character, Integer> pair : pairs) {
 				System.out.println(pair.getFirst() + "," + pair.getSecond());
 			}
-		} else if (command != null && command.equals("getCharPairFrquencies")) {
+		} else if (command != null && command.equals("getCharPairFrequencies")) {
 			List<Pair<String, Integer>> pairs = ta.getMostFrequentCharPairs(
 					numberOfUnits, lowerCase);
 			for (Pair<String, Integer> pair : pairs) {
@@ -73,10 +76,12 @@ public class ConsoleApplication {
 			}
 		} if (command != null && command.equals("getWordFrequenciesPercentage")) {
 			List<Pair<String, Integer>> pairs = ta
-					.getMostFrequentWords(numberOfUnits);
+					.getMostFrequentWords(numberOfUnits, lowerCase);
+			Map<String, Integer> words = ta
+					.getWordFrequencies(lowerCase);
 			int sum = 0;
-			for (Pair<String, Integer> pair : pairs) {
-				sum += pair.getSecond();
+			for (Integer count : words.values()) {
+				sum += count;
 			}
 			System.out.println("word, absfrequency, relfrequency");
 			for (Pair<String, Integer> pair : pairs) {
